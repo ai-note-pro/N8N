@@ -1,0 +1,165 @@
+{
+  "name": "AI News Genration",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "d272ec35-450b-4b23-993c-ed364c0e1a8d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://the-decoder.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        0
+      ],
+      "id": "b1e2714c-bfa0-4178-865b-8c4418aec9b4",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: items from previous node (RSS feed or API)\n// Take only the first 5 items\nconst paragraphs = items.slice(0, 5).map(item => {\n    const data = item.json;\n\n    // Format date in a readable way\n    const pubDate = new Date(data.isoDate).toLocaleDateString(\"en-US\", {\n        weekday: \"short\",\n        year: \"numeric\",\n        month: \"short\",\n        day: \"numeric\"\n    });\n\n    // Join categories as a string\n    const categories = data.categories ? data.categories.join(\", \") : \"\";\n\n    // Build formatted paragraph\n    return `📅 ${pubDate}\n👤 Author: ${data[\"dc:creator\"]}\n📰 Categories: ${categories}\n\n${data.contentSnippet}\n\n🔗 Read more: ${data.guid}`;\n});\n\n// Return as a single item with everything joined\nreturn [{\n    json: {\n        allText: paragraphs.join(\"\\n\\n\") // double new line between articles\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "15c2b3fa-d2f7-43a7-884d-a83294bd2b25",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an AI news assistant.\n\nYour task is to process the provided text and produce a concise, well-structured output in two sections:\n\n📰 AI News Today\n\nCreate a bullet-point list.\n\nEach bullet must follow this format:\n\nTitle\n: 2–3 sentence summary.\n\n📘 Key Terms\n\nExtract EXACTLY 3 technical terms from the text.\n\nFor each term, provide a beginner-friendly explanation in ≤ 25 words.\n\nFormat as a numbered list:\n1. Term — explanation\n\nConstraints:\n\nThe entire output must not exceed 1500 characters.\n\nHere is the text: {{ $json.allText }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        432,
+        0
+      ],
+      "id": "1731f2c9-1879-4a2d-a653-03e214cedc61",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FvYD831Avee0PtJX",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "value": "https://www.notion.so/Daily-News-225fcf16aac8807a9e7aec840ea3fef2",
+          "mode": "url"
+        },
+        "title": "={{ \"AI News \" + new Date().toISOString().slice(0,10) }}",
+        "blockUi": {
+          "blockValues": [
+            {
+              "textContent": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        0
+      ],
+      "id": "2d51b197-66d5-46ff-b631-70f3f5e0c1d7",
+      "name": "Create a page",
+      "credentials": {
+        "notionApi": {
+          "id": "7Npa7kfDhYPEn9Pi",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create a page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "52349080-1984-43cd-9861-fb3d6eff1dbd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d7a2c6a8cad746c73ec7ed9dacc72073aee6972b089e84afe31532f6a74735d9"
+  },
+  "id": "K92Q2purT25GNPrL",
+  "tags": []
+}
