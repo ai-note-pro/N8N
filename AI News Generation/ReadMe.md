@@ -24,7 +24,7 @@ An **automated AI-powered workflow** built in n8n that fetches the latest AI new
 ${data.contentSnippet}
 🔗 Read more: ${data.guid}`;
 });
-return [{ json: { allText: paragraphs.join("\n\n") } }]```
+return [{ json: { allText: paragraphs.join("\n\n") } }]```//
 
 ---
 🤖 OpenAI Node (Prompt)  
