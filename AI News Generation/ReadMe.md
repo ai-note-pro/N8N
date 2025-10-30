@@ -12,7 +12,7 @@ An **automated AI-powered workflow** built in n8n that fetches the latest AI new
 
 ---
 💻 Code Node (JavaScript)
-// Take first 5 articles and format them
+Take first 5 articles and format them
 const paragraphs = items.slice(0, 5).map(item => {
   const data = item.json;
   const pubDate = new Date(data.isoDate).toLocaleDateString("en-US", {
