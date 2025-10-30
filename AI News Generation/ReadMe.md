@@ -28,11 +28,11 @@ return [{ json: { allText: paragraphs.join("\n\n") } }]``` </pre>
 
 ---
 🤖 OpenAI Node (Prompt)  
-You are an AI news assistant.
+<pre> ```You are an AI news assistant.
 Your task is to process the provided text and produce a concise, well-structured output in two sections:
 📰 AI News Today
 Create a bullet-point list with 2–3 sentence summaries.
 📘 Key Terms
 Extract EXACTLY 3 technical terms from the text and explain each in ≤25 words.
 The entire output must not exceed 1500 characters.
-Here is the text: {{ $json.allText }}
+Here is the text: {{ $json.allText }}``` </pre>
