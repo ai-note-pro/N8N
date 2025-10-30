@@ -1,6 +1,6 @@
 
 # 🧠 AI News Generation Workflow (n8n)
-An **automated AI-powered workflow** built in **[n8n](https://n8n.io)** that fetches the latest AI news, summarizes them using **OpenAI GPT-4.1-mini**, and publishes the digest to **Notion**.
+An **automated AI-powered workflow** built in n8n that fetches the latest AI news, summarizes them using **OpenAI GPT-4.1-mini**, and publishes the digest to **Notion**.
 
 ---
 ## ⚙️ How It Works
@@ -9,15 +9,6 @@ An **automated AI-powered workflow** built in **[n8n](https://n8n.io)** that fet
 3. **Code Node (JavaScript)** – Formats and cleans up article data.  
 4. **OpenAI GPT-4.1-mini** – Summarizes the news and extracts 3 key terms.  
 5. **Notion Node** – Creates a new Notion page titled `AI News YYYY-MM-DD`.
-
----
-## 🧩 Workflow Overview
-```mermaid
-graph LR
-A[Trigger] --> B[RSS Read]
-B --> C[Code Format]
-C --> D[GPT Summary]
-D --> E[Notion Create Page]
 
 ---
 💻 Code Node (JavaScript)
